@@ -2,31 +2,39 @@ package punto1;
 
 public class Dijkstra implements CostosMinimosAlgorithm {
 
-	private double[] dist;
-	private int[] pred;
+	private double[][] dist;
+	private int[][] pred;
 	private int s;
 	private minPQ pq;
 
 	@Override
 	public void calculateAllShortPaths( Graph G ) {
+		dist = new double[G.size()][G.size()];
+		pred = new int[G.size()][G.size()];
+		
+		//Calculo costos desde cada source
+		for( int k = 0 ; k < G.size() ; k++ ) {
+			calculateCostsFrom( k, G );
+		}
 		
 	}
 	
 	public void calculateCostsFrom( int source, Graph G) {
-		dist = new double[G.size()];
-		pred = new int[G.size()];
-		
+		// Asigno el parámetro como el source e inicializo las distancias y los predecesores
 		s = source;
-
 		inicializar(G);
+		
 		// Crear minPQ que es un binary heap
 		minPQ pq = new minPQ( G.size() );
 		for( int i = 0 ; i < G.size() ; i++) {
 			pq.insert(i);
 		}
 
+		// Voy sacando del queue el de menor distancia hasta que haya atendido todos
 		while( !pq.isEmpty() ) {
 			int u = pq.extractMin();
+			
+			// Relajo cada vértice, es decir que voy escogiendo vértices que me minimicen los caminos
 			for( int v : G.adj(u) ) {
 				relajar( u, v, G.w(u, v) );
 			}
@@ -34,18 +42,18 @@ public class Dijkstra implements CostosMinimosAlgorithm {
 
 	}
 
-	public void inicializar( Graph G ) {
+	private void inicializar( Graph G ) {
 		for(int i = 0 ; i < G.size() ; i ++) {
-			dist[i] = Double.POSITIVE_INFINITY;
-			pred[i] = -1;			
+			dist[s][i] = Double.POSITIVE_INFINITY;
+			pred[s][i] = -1;			
 		}
-		dist[s] = 0;
+		dist[s][s] = 0;
 	}
 
-	public void relajar( int u, int v, int w) {
-		if( dist[v] > dist[u] + w ) {
-			dist[v] = dist[u] + w;
-			pred[v] = u;
+	private void relajar( int u, int v, int w) {
+		if( dist[s][v] > dist[s][u] + w ) {
+			dist[s][v] = dist[s][u] + w;
+			pred[s][v] = u;
 
 			pq.decreaseKey( v );
 		}
@@ -69,6 +77,7 @@ public class Dijkstra implements CostosMinimosAlgorithm {
 		}
 
 		public void insert( int k ) {
+			//Se inserta de último y se sube hasta su posición adecuada
 			N++;
 			pos[k] = N;
 			queue[N] = k;
@@ -76,8 +85,9 @@ public class Dijkstra implements CostosMinimosAlgorithm {
 		}
 
 		public int extractMin() {
+			//Se manda el primero para el final, para poder retirarlo fácilmente y se desciende el que se acaba de intercambiar
 			int min = queue[1];
-			change(1, N--);
+			intercambiar(1, N--);
 			sink(1);
 
 			//Borrar del queue y borrar la posición
@@ -88,41 +98,49 @@ public class Dijkstra implements CostosMinimosAlgorithm {
 		}
 
 		public void decreaseKey(int k) {
+			//Como la prioridad disminuye, entonces debe ascender en el árbol
 			swim(pos[k]);
 		}
 
-		public void swim(int k) {
-			while (k > 1 && mayor(k/2, k)) {
-				change(k, k/2);
+		private void swim(int k) {
+			//Mientras que k sea menor que su padre, se intercambia con el mismo, es decir que asciende en el árbol
+			while (k > 1 && esMayor(k/2, k)) {
+				intercambiar(k, k/2);
 				k = k/2;
 			}
 		}
-		public void sink( int k ) {
+		private void sink( int k ) {
 			while (2*k <= N) {
 				int j = 2*k;
 				//Escoge el menor de los hijos
-				if ( j < N && mayor(j, j+1) ) {
+				if ( j < N && esMayor(j, j+1) ) {
 					j++;	            
 				}
-				if (!mayor(k, j)) {
+				//Si k es menor al hijo menor entonces debe parar
+				if (!esMayor(k, j)) {
 					break;
 				}
-				change(k, j);
+				//De lo contrario debe intercambiarlos, es decir, sinkea k una posición en el árbol
+				intercambiar(k, j);
 				k = j;
 			}
 		}
 
-		private void change( int i, int j ) {
+		private void intercambiar( int i, int j ) {
 			int temp = queue[i];
+			
+			//Intercambiar en la cola
 			queue[i] = queue[j];
 			queue[j] = temp;
 
+			//Intercambiar las posiciones
 			pos[queue[i]] = i;
 			pos[queue[j]] = j;
 		}
 
-		private boolean mayor( int i , int j ) {
-			return dist[ queue[i] ] - dist[ queue[j] ] > 0 ;
+		private boolean esMayor( int i , int j ) {
+			//Criterio es la distancia
+			return dist[s][ queue[i] ] - dist[s][ queue[j] ] > 0 ;
 		}
 	}
 }

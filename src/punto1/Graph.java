@@ -37,6 +37,10 @@ public class Graph {
 	public int w( int u, int v ) {
 		return w[u][v];
 	}
+	
+	public int[][] getWeights(){
+		return w;
+	}
 
 	class Edge{
 
