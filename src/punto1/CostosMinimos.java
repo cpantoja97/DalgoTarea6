@@ -16,7 +16,7 @@ public class CostosMinimos {
 	public static void main(String[] args) throws Exception {
 
 		//Load algorithm class
-		String algorithmClassName = CostosMinimosAlgorithm.class.getPackage().getName()+"."+args[0]+"CostosMinimosAlgorithm";
+		String algorithmClassName = CostosMinimosAlgorithm.class.getPackage().getName()+"."+args[0];
 
 		//Load input data
 		int tamanioMatriz = Integer.parseInt(args[1]);
