@@ -7,29 +7,29 @@ public class BFS {
 	boolean[] marked;
 	int[] numComponente;
 	int count;
-	
+
 	public BFS( GraphUndirected G ) {
 		marked = new boolean[ G.size() ];
 		numComponente = new int[ G.size() ];
 		count = 0;
-		
+
 		for( int source = 0; source < G.size() ; source++ ) {
 			if ( !marked[source] ) {
+				numComponente[source] = count;
 				bfsSearch( source, G );
 				count++;
 			}
-		}
-		
+		}	
 	}
-	
+
 	public void bfsSearch( int s, GraphUndirected G) {
 		Queue queue = new Queue();
 		queue.enqueue(s);
-		
+
 		marked[s] = true;
-		
+
 		while( !queue.isEmpty() ) {
-			
+
 			int u = queue.dequeue();
 			for( int v : G.adj(u) ) {
 				if( !marked[v] ) {
@@ -38,10 +38,10 @@ public class BFS {
 					queue.enqueue( v );
 				}
 			}
-			
+
 		}
 	}
-	
+
 	public ArrayList<Integer>[] darComponentes(){
 		@SuppressWarnings("unchecked")
 		ArrayList<Integer>[] componentes = new ArrayList[count];
@@ -53,16 +53,16 @@ public class BFS {
 		}
 		return componentes;
 	}
-	
+
 	private class Queue {
 		Nodo primero;
 		Nodo ultimo;
 		int n;
-		
+
 		public boolean isEmpty() {
 			return n == 0;
 		}
-		
+
 		public void enqueue( int k ) {
 			Nodo nuevo = new Nodo();
 			nuevo.item = k;
@@ -75,7 +75,7 @@ public class BFS {
 			}
 			n++;
 		}
-		
+
 		public int dequeue() {
 			int temp = primero.item;
 			primero = primero.sig;		
@@ -85,12 +85,12 @@ public class BFS {
 			n--;
 			return temp;
 		}
-		
+
 		private class Nodo{
 			int item;
 			Nodo sig;
 		}
-		
+
 	}
-	
+
 }

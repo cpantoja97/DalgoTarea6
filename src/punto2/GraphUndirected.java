@@ -42,7 +42,18 @@ public class GraphUndirected {
 		return w;
 	}
 
-	class Edge{
-
+	@Override
+	public String toString() {
+		String str = "";
+		int u = 0;
+		for( ArrayList<Integer> adj : adjacents) {
+			str += u + ":";
+			for( int v : adj ) {
+				str += " " + v;
+			}
+			str += "\n";
+			u++;
+		}
+		return str;
 	}
 }

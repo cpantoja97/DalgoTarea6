@@ -1,5 +1,7 @@
 package punto1;
 
+import java.util.ArrayList;
+
 public class Dijkstra implements CostosMinimosAlgorithm {
 
 	private double[][] dist;
@@ -11,21 +13,21 @@ public class Dijkstra implements CostosMinimosAlgorithm {
 	public void calculateAllShortPaths( Graph G ) {
 		dist = new double[G.size()][G.size()];
 		pred = new int[G.size()][G.size()];
-		
+
 		//Calculo costos desde cada source
 		for( int k = 0 ; k < G.size() ; k++ ) {
 			calculateCostsFrom( k, G );
 		}
-		
+
 	}
-	
+
 	public void calculateCostsFrom( int source, Graph G) {
 		// Asigno el parámetro como el source e inicializo las distancias y los predecesores
 		s = source;
 		inicializar(G);
-		
+
 		// Crear minPQ que es un binary heap
-		minPQ pq = new minPQ( G.size() );
+		pq = new minPQ( G.size() );
 		for( int i = 0 ; i < G.size() ; i++) {
 			pq.insert(i);
 		}
@@ -33,13 +35,38 @@ public class Dijkstra implements CostosMinimosAlgorithm {
 		// Voy sacando del queue el de menor distancia hasta que haya atendido todos
 		while( !pq.isEmpty() ) {
 			int u = pq.extractMin();
-			
+
 			// Relajo cada vértice, es decir que voy escogiendo vértices que me minimicen los caminos
 			for( int v : G.adj(u) ) {
 				relajar( u, v, G.w(u, v) );
 			}
 		}
 
+	}
+
+	public void imprimirCostos() {
+		for( int s = 0 ; s < dist.length ; s++) {
+			for( int to = 0; to < dist.length ; to++ ) {
+				System.out.print( dist[s][to] + " " );
+			}
+			System.out.println();
+		}
+	}
+
+	@Override
+	public void imprimirPath(int s, int v) {
+		System.out.println("Costo: " + dist[s][v]);
+		ArrayList<Integer> pathInv = new ArrayList<Integer>();
+		int act = v;
+		while( act != s ) {
+			pathInv.add( pred[s][act] );
+			act = pred[s][act];
+		}
+		
+		for( int i = pathInv.size()-1 ; i >= 0 ; i-- ) {
+			System.out.print( pathInv.get(i) +" --> " );
+		}
+		System.out.println(v);
 	}
 
 	private void inicializar( Graph G ) {
@@ -50,12 +77,17 @@ public class Dijkstra implements CostosMinimosAlgorithm {
 		dist[s][s] = 0;
 	}
 
-	private void relajar( int u, int v, int w) {
+	private void relajar( int u, int v, int w) {	
+
+
 		if( dist[s][v] > dist[s][u] + w ) {
 			dist[s][v] = dist[s][u] + w;
 			pred[s][v] = u;
-
-			pq.decreaseKey( v );
+			if (pq.contains( v )) { 
+				pq.decreaseKey( v );
+			} else {
+				pq.insert( v );
+			}
 		}
 	}
 
@@ -67,6 +99,7 @@ public class Dijkstra implements CostosMinimosAlgorithm {
 		public minPQ( int max ) {
 			queue = new int[max+1];
 			pos = new int[max];
+
 			for( int i = 0 ; i < max; i++ ) {
 				pos[i] = -1;
 			}
@@ -74,6 +107,10 @@ public class Dijkstra implements CostosMinimosAlgorithm {
 
 		public boolean isEmpty() {
 			return N == 0;
+		}
+
+		public boolean contains( int k ) {
+			return pos[k] != -1;
 		}
 
 		public void insert( int k ) {
@@ -108,6 +145,7 @@ public class Dijkstra implements CostosMinimosAlgorithm {
 				intercambiar(k, k/2);
 				k = k/2;
 			}
+
 		}
 		private void sink( int k ) {
 			while (2*k <= N) {
@@ -128,7 +166,7 @@ public class Dijkstra implements CostosMinimosAlgorithm {
 
 		private void intercambiar( int i, int j ) {
 			int temp = queue[i];
-			
+
 			//Intercambiar en la cola
 			queue[i] = queue[j];
 			queue[j] = temp;

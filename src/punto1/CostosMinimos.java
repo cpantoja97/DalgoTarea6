@@ -25,7 +25,6 @@ public class CostosMinimos {
 		
 		Graph grafo = new Graph( costosGrafo );
 
-
 		CostosMinimosAlgorithm calculator = (CostosMinimosAlgorithm)Class.forName(algorithmClassName).newInstance();
 		
 		//Run the coin change algorithm
@@ -38,6 +37,12 @@ public class CostosMinimos {
 		//Output results
 		
 		System.out.println("Total time spent (milliseconds): "+(endTime-startTime));
+		
+		System.out.println( "Costos minimos:");
+		calculator.imprimirCostos();
+		
+//		System.out.println("Camino de 1 a 2:");
+//		calculator.imprimirPath(1, 2);
 		
 	}
 
@@ -53,7 +58,7 @@ public class CostosMinimos {
 			String line = in.readLine();
 			
 			for( int i = 0; line != null; i++ ) {
-				String[] numString = line.split(" ");
+				String[] numString = line.split("\t");
 				
 				for( int j = 0; j < numString.length ; j++ ) {
 					int costo = Integer.parseInt( numString[j] );

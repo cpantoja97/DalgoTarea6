@@ -19,15 +19,16 @@ public class ComponentesConectadas {
 		String archivoMatriz = args[1];
 		int[][] matrizAdyacencia = loadGraph( tamanioMatriz, archivoMatriz );
 
-		GraphUndirected grafo = new GraphUndirected( matrizAdyacencia );	
 
+		GraphUndirected grafo = new GraphUndirected( matrizAdyacencia );	
+		
 		//Run the coin change algorithm
-			//long startTime = System.currentTimeMillis();
+		//long startTime = System.currentTimeMillis();
 
 		BFS bfs = new BFS( grafo );
 		ArrayList<Integer>[] componentes = bfs.darComponentes();
 
-			//long endTime = System.currentTimeMillis();
+		//long endTime = System.currentTimeMillis();
 
 		//Output results
 		int i= 1;
