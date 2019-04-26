@@ -19,7 +19,8 @@ public class Graph {
 			adjacents[i] = new ArrayList<Integer>();
 
 			for( int j = 0 ; j < costos.length ; j++ ) {
-				if( w[i][j] != 0 && w[i][j] != -1 ) {
+				if( i!= j && w[i][j] != -1 ) {
+
 					adjacents[i].add(j);
 				}
 			}

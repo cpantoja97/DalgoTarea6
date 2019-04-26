@@ -27,7 +27,7 @@ public class CostosMinimos {
 
 		CostosMinimosAlgorithm calculator = (CostosMinimosAlgorithm)Class.forName(algorithmClassName).newInstance();
 		
-		//Run the coin change algorithm
+
 		long startTime = System.currentTimeMillis();
 		
 		calculator.calculateAllShortPaths( grafo );
@@ -38,11 +38,7 @@ public class CostosMinimos {
 		
 		System.out.println("Total time spent (milliseconds): "+(endTime-startTime));
 		
-		System.out.println( "Costos minimos:");
-		calculator.imprimirCostos();
-		
-//		System.out.println("Camino de 1 a 2:");
-//		calculator.imprimirPath(1, 2);
+
 		
 	}
 

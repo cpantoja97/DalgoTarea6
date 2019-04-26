@@ -1,4 +1,3 @@
-# DalgoTarea6
 Parte 1:
 se corre regularmente la clase CostosMinimos con las entradas indicadas en los comentarios ej:
 
