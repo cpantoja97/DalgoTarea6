@@ -19,8 +19,7 @@ public class Graph {
 			adjacents[i] = new ArrayList<Integer>();
 
 			for( int j = 0 ; j < costos.length ; j++ ) {
-				//TODO Cuenta a sí mismo??????
-				if( i!= j && w[i][j] != -1 ) {
+				if( w[i][j] != 0 && w[i][j] != -1 ) {
 					adjacents[i].add(j);
 				}
 			}
@@ -33,7 +32,7 @@ public class Graph {
 		return size;
 	}
 
-	public Iterable<Integer> adj( int u ) {
+	public ArrayList<Integer> adjacentes( int u ) {
 		return adjacents[u];
 	}
 
